@@ -30,10 +30,6 @@ export const ontology = {
                 Shield: {
                     AOE: {} as Record<string, Warframe>,
                     SingleTarget: {} as Record<string, Warframe>
-                },
-                MaxHealth: {
-                    AOE: {} as Record<string, Warframe>,
-                    SingleTarget: {} as Record<string, Warframe>
                 }
             },
             Buff: {
@@ -58,6 +54,16 @@ export const ontology = {
                 Stealth: {} as Record<string, Warframe>,
                 LootGeneration: {} as Record<string, Warframe>,
                 AmmoGeneration: {} as Record<string, Warframe>,
+            },
+            Debuff: {
+                ArmorReduction: {
+                    AOE: {} as Record<string, Warframe>,
+                    SingleTarget: {} as Record<string, Warframe>
+                },
+                DamageVulnerability: {
+                    AOE: {} as Record<string, Warframe>,
+                    SingleTarget: {} as Record<string, Warframe>
+                },
             }
         },
         Damage: {

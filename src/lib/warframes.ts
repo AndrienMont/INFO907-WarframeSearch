@@ -31,7 +31,7 @@ export const warframes: Warframe[] = [
             TRAGEDY: Two Dark Verses cast in succession attack enemies. Damage Over Time from Slash, Heat and Toxin Status Effects accumulates in a single blast.\n
             WORDWARDEN: A Light Verse followed by a Dark Verse supports allies with copies of Noctua. Noctua copies synchronize their attacks with their designated ally's attacks.\n
             PAGEFLIGHT: A Dark Verse followed by a Light Verse summons Paragrimms that swoop at enemies, making them vulnerable to Status Chance and Status Damage, as well as drawing enemy attacks away from allies.`,
-            'Damage Instant AOE', ['Slash'])
+            'Damage Instant AOE / Buff Overguard AOE', ['Slash'])
         ],
         3,
         3,
