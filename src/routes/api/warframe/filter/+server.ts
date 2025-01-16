@@ -1,25 +1,23 @@
 import { warframes } from "$lib/warframes";
-import { ontology, populateOntology } from "$lib/ontology";
+import { ontology, populateOntology, searchOntology } from "$lib/ontology";
+import { Warframe } from "../../../../class/warframeClass";
 
 populateOntology(warframes);
+console.log(ontology);
 
 export async function POST({ request }) {
     const criteria = await request.json();
-    const abilitiesArray = criteria.abilities.map((ability: string) => ability.trim());
-    const filtered = warframes.filter(item => {
-        const matchesAbilities = abilitiesArray.every((ability: string) => item.abilities.some(a => a.type === ability));
-        const matchesAcquisition = criteria.acquisition === 0 || item.ease_of_acquisition === criteria.acquisition;
-        const matchesComplexity = criteria.complexity === 0 || item.gameplay_complexity === criteria.complexity;
-        const matchesNuke = criteria.nuke === 0 || item.ease_to_nuke === criteria.nuke;
-        return matchesAbilities && matchesAcquisition && matchesComplexity && matchesNuke;
-    });
+    const { abilities, acquisition, complexity, nuke } = criteria;
 
-    // console.log(filtered);
+    const matchedWarframes = searchOntology({ abilities, acquisition, complexity, nuke }, ontology);
 
-    return new Response(JSON.stringify(filtered), {
+    const results = matchedWarframes.map(name => warframes.find(warframe => warframe.name === name));
+
+    console.log(results);
+
+    return new Response(JSON.stringify(results), {
         headers: {
             "content-type": "application/json",
         }
     });
-    // return new Response()
 }

@@ -1,7 +1,9 @@
-import data from '../../../data/warframe_data.json';
+import { warframes } from '$lib/warframes';
 
 export function GET() {
-    return new Response(JSON.stringify(data), {
-        headers: {"content-type": "application/json"}
-    })
+    return new Response(JSON.stringify(warframes), {
+        headers: {
+            'content-type': 'application/json'
+        }
+    });
 }

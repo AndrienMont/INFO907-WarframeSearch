@@ -1,5 +1,7 @@
 <script lang="ts">
     import {onMount} from 'svelte';
+    import WarframeModal from './warframeModal.svelte';
+    import type { Warframe } from '../class/warframeClass';
 
     let criteria: { abilities: string[], acquisition: number, complexity: number, nuke: number } = {
         abilities: [],
@@ -8,6 +10,7 @@
         nuke: 0
     };
     let results: any[] = [];
+    let showModal = false;
 
     let supportTags = [
         'AOE Energy regen',
@@ -61,7 +64,12 @@
     let showDifficulty = true;
 
     async function search() {
-        // console.log(criteria);
+        console.log(criteria);
+        if(criteria.abilities.length === 0 && criteria.acquisition === 0 && criteria.complexity === 0 && criteria.nuke === 0) {
+            const res = await fetch('/api/warframe');
+            results = await res.json();
+            return;
+        }
         const res = await fetch('./api/warframe/filter', {
             method: 'POST',
             headers: {
@@ -70,6 +78,7 @@
             body: JSON.stringify(criteria)
         })
         results = await res.json();
+        console.log(results);
     }
 
     function toggleTag(tag: string) {
@@ -84,13 +93,25 @@
         criteria.abilities = criteria.abilities.filter(t => t !== tag);
     }
 
-    function resetCriteria() {
+    async function reset() {
         criteria = {
             abilities: [],
             acquisition: 0,
             complexity: 0,
             nuke: 0
         };
+        const res = await fetch('/api/warframe');
+        results = await res.json();
+    }
+
+    let warframe: Warframe;
+
+    function openModal(result: Warframe) {
+        showModal = false; 
+        setTimeout(() => {
+            warframe = result; 
+            showModal = true;
+        }, 100);
     }
 
     onMount(async () => {
@@ -195,6 +216,32 @@
     /* .content.show {
         display: block;
     } */
+    .result-button {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        display: flex;
+        align-items: center;
+    }
+    .result-button:hover {
+        background-color: #007BFF;
+        color: white;
+        transform: scale(1.05);
+    }
+    .result-button img {
+        margin-right: 10px;
+        border-radius: 50%;
+    }
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+        list-style: none;
+    }
 </style>
 
 <div>
@@ -214,7 +261,7 @@
             </div>
             <div>
                 <button on:click={search}>🔎︎ Search</button>
-                <button on:click={resetCriteria}>↺ Reset</button>
+                <button on:click={reset}>↺ Reset</button>
             </div>
         </div>
     </div>
@@ -295,8 +342,11 @@
     <h3>Results</h3>
     <ul>
         {#each results as result}
-            <li>{result.name} - Roles: {result.role.join(', ')}</li>
-            <!-- little cards for display with click function (modal ?) -->
-        {/each}
-    </ul>
-</div>
+            <button class="result-button" on:click={() => openModal(result)}>
+                <img src={result.imageUrl} alt={result.name} width="50" height="50" />
+                {result.name}
+            </button>
+            {/each}
+        </ul>
+    </div>
+<WarframeModal {showModal} {warframe} />
