@@ -1,6 +1,7 @@
 <script lang="ts">
     import {onMount} from 'svelte';
     import WarframeModal from './warframeModal.svelte';
+    import AddWarframeForm from './addWarframeForm.svelte';
     import type { Warframe } from '../class/warframeClass';
 
     let criteria: { abilities: string[], acquisition: number, complexity: number, nuke: number } = {
@@ -11,6 +12,7 @@
     };
     let results: any[] = [];
     let showModal = false;
+    let showAddForm = false;
 
     let supportTags = [
         'AOE Energy regen',
@@ -107,9 +109,9 @@
     let warframe: Warframe;
 
     function openModal(result: Warframe) {
-        showModal = false; 
+        showModal = false;
         setTimeout(() => {
-            warframe = result; 
+            warframe = result;
             showModal = true;
         }, 100);
     }
@@ -242,10 +244,31 @@
         padding: 0;
         list-style: none;
     }
+    .add-warframe-button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    .add-warframe-button:hover {
+        background-color: #218838;
+    }
 </style>
 
 <div>
-    <h2>Search Warframe</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Search Warframe</h2>
+        <button
+            class="add-warframe-button"
+            on:click={() => showAddForm = true}
+        >
+            + Add Warframe
+        </button>
+    </div>
     <div>
         <h3>Search Summary</h3>
         <div class="search-summary">
@@ -350,3 +373,4 @@
         </ul>
     </div>
 <WarframeModal {showModal} {warframe} />
+<AddWarframeForm bind:showForm={showAddForm} />
